@@ -1,10 +1,15 @@
+from team_name.functions import update_state
 
 class Player:
+
+    state = {}
+
     def __init__(self, player):
         """
         Called once at the beginning of a game to initialise this player.
-        Set up an internal representation of the game state.
-
+        # TODO:
+        1. Set up an internal representation of the game state.
+        2. player is "upper" or "lower
         The parameter player is the string "upper" (if the instance will
         play as Upper), or the string "lower" (if the instance will play
         as Lower).
@@ -16,6 +21,7 @@ class Player:
         Called at the beginning of each turn. Based on the current state
         of the game, select an action to play this turn.
         """
+
         # put your code here
     
     def update(self, opponent_action, player_action):
@@ -26,5 +32,6 @@ class Player:
         The parameter opponent_action is the opponent's chosen action,
         and player_action is this instance's latest chosen action.
         """
+        state = update_state(state, opponent_action, player_action)
         # put your code here
 
