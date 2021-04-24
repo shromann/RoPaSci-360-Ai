@@ -32,6 +32,7 @@ class Player:
         The parameter opponent_action is the opponent's chosen action,
         and player_action is this instance's latest chosen action.
         """
+        # Needs to check for tokens on the same hex and kill the correct token  
         state = update_state(state, opponent_action, player_action)
         # put your code here
 
