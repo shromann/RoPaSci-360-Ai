@@ -21,7 +21,6 @@ class Player:
         Called at the beginning of each turn. Based on the current state
         of the game, select an action to play this turn.
         """
-
         # put your code here
     
     def update(self, opponent_action, player_action):
