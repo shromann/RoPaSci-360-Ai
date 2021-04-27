@@ -15,6 +15,9 @@ class Player:
         as Lower).
         """
         # put your code here
+        self.Lower_dict = {}
+        self.Upper_dict = {}
+        self.player_location = player
 
     def action(self):
         """
@@ -32,6 +35,6 @@ class Player:
         and player_action is this instance's latest chosen action.
         """
         # Needs to check for tokens on the same hex and kill the correct token  
-        state = update_state(state, opponent_action, player_action)
+        state = update_state(Upper_dict, Lower_dict, player_action, opponent_action, player_action)
         # put your code here
 
