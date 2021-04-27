@@ -1,4 +1,4 @@
-from team_name.functions import update_state
+from XAEA_Xii.functions import update_state
 
 class Player:
 
@@ -17,7 +17,7 @@ class Player:
         # put your code here
         self.Lower_dict = {}
         self.Upper_dict = {}
-        self.player_location = player
+        self.player = player
 
     def action(self):
         """
