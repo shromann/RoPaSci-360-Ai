@@ -106,3 +106,28 @@ def win(A , B):
     elif A == 'r' and B == 'p':
         return -1
     return 0
+
+def out_of_board(location):
+    if location[0] < -4 or location[0] > 4 or location[1] < -4 or location[1] > 4 :
+        return True
+    elif location[0] == -4 and (location[1] > 4 or location[1] < 0):
+        return True
+    elif location[0] == -3 and (location[1] > 4 or location[1] < -1):
+        return True
+    elif location[0] == -2 and (location[1] > 4 or location[1] < -2):
+        return True
+    elif location[0] == -1 and (location[1] > 4 or location[1] < -3):
+        return True
+    elif location[0] == 0 and (location[1] > 4 or location[1] < -4):
+        return True
+    elif location[0] == 1 and (location[1] > 3 or location[1] < -4):
+        return True
+    elif location[0] == 2 and (location[1] > 2 or location[1] < -4):
+        return True
+    elif location[0] == 3 and (location[1] > 1 or location[1] < -4):
+        return True
+    elif location[0] == 4 and (location[1] > 0 or location[1] < -4):
+        return True
+    else:
+        return False
+
