@@ -28,10 +28,10 @@ def update_state(Upper_dict, Lower_dict, player, opponent_action, player_action)
         their_dict = non_throw(their_dict, opponent_action)
         
     if player_action[2] != opponent_action[2]:
-            kill_tokens(player_action[2], Lower_dict, Upper_dict)
-            kill_tokens(opponent_action[2], Lower_dict, Upper_dict)
-        else:
-            kill_tokens(player_action[2], Lower_dict, Upper_dict)
+        kill_tokens(player_action[2], Lower_dict, Upper_dict)
+        kill_tokens(opponent_action[2], Lower_dict, Upper_dict)
+    else:
+        kill_tokens(player_action[2], Lower_dict, Upper_dict)
 
 def throw(dictionary, action):
     token_type = action[1]
@@ -51,7 +51,6 @@ def non_throw(dictionary, action):
     return dictionary
 
 def kill_tokens(new_hex, lower_dict, upper_dict):
-    # NOT FINISHED
     all_token_types = ['s', 'r', 'p']
     types_to_remove = []
     for token_type in all_token_types:
@@ -62,28 +61,24 @@ def kill_tokens(new_hex, lower_dict, upper_dict):
     
     if len(set(types_to_remove)) == 2:
         if 's' in types_to_remove and 'p' in types_to_remove:
-            if new_hex in lower_dict['p']:
-                lower_dict.remove(new_hex)
-            if new_hex in upper_dict['p']:
-                upper_dict.remove(new_hex)
+            lower_dict = remove_hex_in_dict(new_hex, lower_dict, 'p')
+            upper_dict = remove_hex_in_dict(new_hex, upper_dict, 'p')
         elif 'p' in types_to_remove and 'r' in types_to_remove:
-            if new_hex in lower_dict['r']:
-                lower_dict.remove(new_hex)
-            if new_hex in upper_dict['r']:
-                upper_dict.remove(new_hex)
+            lower_dict = remove_hex_in_dict(new_hex, lower_dict, 'r')
+            upper_dict = remove_hex_in_dict(new_hex, upper_dict, 'r')
         elif 'r' in types_to_remove and 's' in types_to_remove:
-            if new_hex in lower_dict['s']:
-                lower_dict.remove(new_hex)
-            if new_hex in upper_dict['s']:
-                upper_dict.remove(new_hex)
+            lower_dict = remove_hex_in_dict(new_hex, lower_dict, 's')
+            upper_dict = remove_hex_in_dict(new_hex, upper_dict, 's')
 
     if len(set(types_to_remove)) == 3:
         for token_types in all_token_types:
-            if new_hex in lower_dict[token_types]:
-                lower_dict.remove(new_hex)
-            if new_hex in upper_dict[token_types]:
-                upper_dict.remove(new_hex)
-            
+            lower_dict = remove_hex_in_dict(new_hex, lower_dict, token_types)
+            upper_dict = remove_hex_in_dict(new_hex, upper_dict, token_types)
+
+def remove_hex_in_dict(hex_loc, dictionary, token_type):
+    if hex_loc in dictionary[token_type]:
+        dictionary.remove(hex_loc)
+
 def opposite_types(token_type):
     if token_type == 's':
         return ('p','r')
