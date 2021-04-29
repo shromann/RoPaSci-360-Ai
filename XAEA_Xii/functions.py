@@ -11,42 +11,27 @@ def update_state(Upper_dict, Lower_dict, player, opponent_action, player_action)
     if player_action[0] == "THROW" and opponent_action[0] == "THROW":
         our_dict = throw(our_dict, player_action)
         their_dict = throw(their_dict, opponent_action)
-        if player_action[2] != opponent_action[2]:
-            kill_tokens(player_action[2], Lower_dict, Upper_dict)
-            kill_tokens(opponent_action[2], Lower_dict, Upper_dict)
-        else:
-            kill_tokens(player_action[2], Lower_dict, Upper_dict)
 
     # When player throws and opponent slides/swings    
     elif player_action[0] == "THROW":
         our_dict = throw(our_dict, player_action)
         their_dict = non_throw(their_dict, opponent_action)
-        if player_action[2] != opponent_action[2]:
-            kill_tokens(player_action[2], Lower_dict, Upper_dict)
-            kill_tokens(opponent_action[2], Lower_dict, Upper_dict)
-        else:
-            kill_tokens(player_action[2], Lower_dict, Upper_dict)
 
     # When opponent throws and player slides/swings
     elif opponent_action[0] == "THROW":
         their_dict = throw(their_dict, opponent_action)
         our_dict = non_throw(our_dict, player_action)
-        if player_action[2] != opponent_action[2]:
-            kill_tokens(player_action[2], Lower_dict, Upper_dict)
-            kill_tokens(opponent_action[2], Lower_dict, Upper_dict)
-        else:
-            kill_tokens(player_action[2], Lower_dict, Upper_dict)
-
+        
     # Both players swings/slides
     else:
         our_dict = non_throw(our_dict, player_action)
         their_dict = non_throw(their_dict, opponent_action)
-        if player_action[2] != opponent_action[2]:
+        
+    if player_action[2] != opponent_action[2]:
             kill_tokens(player_action[2], Lower_dict, Upper_dict)
             kill_tokens(opponent_action[2], Lower_dict, Upper_dict)
         else:
             kill_tokens(player_action[2], Lower_dict, Upper_dict)
-
 
 def throw(dictionary, action):
     token_type = action[1]
