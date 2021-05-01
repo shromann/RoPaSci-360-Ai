@@ -50,6 +50,7 @@ def throw(dictionary, action):
     dictionary[token_type] = dictionary[token_type].append(hex)
     return dictionary
 
+
 def non_throw(dictionary, action):
     all_token_types = ['s', 'r', 'p']
     curr_hex = action[1]
