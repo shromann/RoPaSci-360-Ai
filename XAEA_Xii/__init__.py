@@ -1,1 +1,1 @@
-from team_name.player import Player
+from XAEA_Xii.player import Player
