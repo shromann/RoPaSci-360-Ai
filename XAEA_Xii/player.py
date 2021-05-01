@@ -35,6 +35,6 @@ class Player:
         and player_action is this instance's latest chosen action.
         """
         # Needs to check for tokens on the same hex and kill the correct token  
-        state = update_state(Upper_dict, Lower_dict, player_action, opponent_action, player_action)
+        state = update_state(Upper_dict, Lower_dict, player, opponent_action, player_action)
         # put your code here
 
