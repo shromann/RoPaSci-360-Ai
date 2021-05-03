@@ -1,8 +1,14 @@
-from XAEA_Xii.functions import update_state
+from XAEA_Xii.board import update_action
+from XAEA_Xii.move import make_move
 
 class Player:
+    """
+    Internal Representation:
+        dictionary: 
+            - Key: (r, q)
+            - Value: "atype"
+    """
 
-    state = {}
 
     def __init__(self, player):
         """
@@ -13,18 +19,27 @@ class Player:
         The parameter player is the string "upper" (if the instance will
         play as Upper), or the string "lower" (if the instance will play
         as Lower).
+
+        - what does it mean to play upper or lower?
+        - set up internal game board
         """
-        # put your code here
-        self.Lower_dict = {}
-        self.Upper_dict = {}
-        self.player = player
+        self.color = player
+        self.state = {"player": {}, "opponent": {}}
+
+        self.player_TD = 0
+        self.opponent_TD = 0
+        
+        self.player_throws = 0
+        self.opponent_throws = 0
+
 
     def action(self):
         """
         Called at the beginning of each turn. Based on the current state
         of the game, select an action to play this turn.
         """
-        # put your code here
+        return make_move(state, self.player_TD, self.opponent_TD)
+        
     
     def update(self, opponent_action, player_action):
         """
@@ -34,7 +49,10 @@ class Player:
         The parameter opponent_action is the opponent's chosen action,
         and player_action is this instance's latest chosen action.
         """
-        # Needs to check for tokens on the same hex and kill the correct token  
-        state = update_state(Upper_dict, Lower_dict, player, opponent_action, player_action)
-        # put your code here
+        update_action(self.board["player"],   player_action)
+        update_action(self.board["opponent"], opponent_action)
+        
 
+
+        
+        

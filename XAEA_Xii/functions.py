@@ -1,3 +1,5 @@
+import random
+
 def update_state(Upper_dict, Lower_dict, player, opponent_action, player_action):
     # When we are the lower player
     if player =='lower':
@@ -38,7 +40,6 @@ def throw(dictionary, action):
     hex = action[2]
     dictionary[token_type] = dictionary[token_type].append(hex)
     return dictionary
-
 
 def non_throw(dictionary, action):
     all_token_types = ['s', 'r', 'p']
@@ -127,3 +128,9 @@ def out_of_board(location):
     else:
         return False
 
+def first_move(player):
+    loc = (4,-2)
+    if player == 'lower':
+        loc = (-4, 2)
+
+    
