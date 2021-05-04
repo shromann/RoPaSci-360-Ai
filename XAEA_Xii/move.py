@@ -2,13 +2,17 @@ from XAEA_Xii.eval import beat_possible
 from XAEA_Xii.util import throw, slide, swing
 
 
-def throw_action(throw_token, opponenet):
+
+
+def throw_action(throw_token, opponenet, opponent_throws, colour):
     """
     Use multi-minimax to choose the best throw location
     return: loc (r, q)
     """
+    
+    
 
-def swing_slide_action(player, opponenet):
+def swing_slide_action(player, opponenet, opponent_throws, colour):
     """
     Use multi-minimax to choose best slide / swing
     return: atype (slide/swing), old_loc: (r0, q0), new_loc (r_1, q_1)
@@ -27,7 +31,7 @@ Comments:
 """
 
 
-def make_move(state, player_TD, opponent_TD):
+def make_move(state, player_throws, opponent_throws, colour):
     """
     Check if player has the right tokens to -beat-> opponenet
         - no:
@@ -38,12 +42,18 @@ def make_move(state, player_TD, opponent_TD):
     player = state["player"]
     opponent = state["opponent"]
 
+    l = (4, -2)
+    if colour == "lower":
+        l = (-4, 2)
+    return ('THROW', 's', l)
+
+
     throw_token = beat_possible(player, opponent)
     if throw_token:
-        token, loc = throw_token, throw_action(throw_token, opponent, player_TD) # multi-minimax: throw
+        token, loc = throw_token, throw_action(throw_token, opponent, opponent_throws, colour) # multi-minimax: throw
         throw(token, loc)
     else:
-        atype, old_loc, new_loc = swing_slide_action(player, opponent)
+        atype, old_loc, new_loc = swing_slide_action(player, opponent, colour)
         swing_slide_action(atype, old_loc, new_loc) # multi-minimax: slide / swing
 
 

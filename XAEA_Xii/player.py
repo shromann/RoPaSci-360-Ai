@@ -29,11 +29,11 @@ class Player:
         - what does it mean to play upper or lower?
         - set up internal game board
         """
-        self.color = player
-        self.state = {"player": defaultdict(list), "opponent": defaultdict(list)}
+        self.colour = player
+        self.state  = {"player": defaultdict(list), "opponent": defaultdict(list)}
         
-        self.player_throws = 9
-        self.opponent_throws = 9
+        self.player_throws   = 0
+        self.opponent_throws = 0
 
 
     def action(self):
@@ -41,7 +41,7 @@ class Player:
         Called at the beginning of each turn. Based on the current state
         of the game, select an action to play this turn.
         """
-        return make_move(state, self.player_throws, self.opponent_opponent)
+        return make_move(self.state, self.player_throws, self.opponent_throws, self.colour)
         
     
     def update(self, opponent_action, player_action):
@@ -53,10 +53,10 @@ class Player:
         and player_action is this instance's latest chosen action.
         """
         if opponent_action[0] == 'THROW':
-            self.opponent_throws -= 1
+            self.opponent_throws += 1
         elif player_action[0] == 'THROW':
-            self.player_throws -= 1
-        
-        update_state(self.board["player"],   player_action)
-        update_state(self.board["opponent"], opponent_action)
+            self.player_throws   += 1
 
+
+        self.state["player"]   = update_state(self.state["player"]  ,   player_action)
+        self.state["opponent"] = update_state(self.state["opponent"], opponent_action)
