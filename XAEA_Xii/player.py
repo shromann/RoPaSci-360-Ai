@@ -54,9 +54,9 @@ class Player:
         """
         if opponent_action[0] == 'THROW':
             self.opponent_throws += 1
-        elif player_action[0] == 'THROW':
+        if player_action[0] == 'THROW':
             self.player_throws   += 1
-
 
         self.state["player"]   = update_state(self.state["player"]  ,   player_action)
         self.state["opponent"] = update_state(self.state["opponent"], opponent_action)
+        # TODO: Internal_Game_PLAY Function

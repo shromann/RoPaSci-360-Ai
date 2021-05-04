@@ -5,12 +5,13 @@ def update_state(state, action):
     if mv_type == 'THROW':
         token = action[1]
     elif mv_type in ['SLIDE', 'SWING']:
-        token = state[action[1]].pop()
+        token = state[action[1]].pop() # TODO: Implement -> Minimize Function (removes losing tokens from overlapping hexes)
         # remove from states if no token on that hex
         if not state[action[1]]:
             del state[action[1]]
     
     state[loc].append(token)
     return state
+
 
 
