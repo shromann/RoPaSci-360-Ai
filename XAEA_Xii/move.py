@@ -1,6 +1,8 @@
 from XAEA_Xii.eval import beat_possible
 from XAEA_Xii.util import throw, slide, swing
 from XAEA_Xii.functions import out_of_board
+from XAEA_Xii.minimax import minimax
+from XAEA_Xii.board import update_state
 
 
 def throw_action(throw_token, opponenet, opponent_throws, colour):
