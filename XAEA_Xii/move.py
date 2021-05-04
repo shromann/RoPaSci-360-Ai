@@ -42,17 +42,13 @@ def make_move(state, player_throws, opponent_throws, colour):
     player = state["player"]
     opponent = state["opponent"]
 
-    l = (4, -2)
-    if colour == "lower":
-        l = (-4, 2)
-    return ('THROW', 's', l)
     throw_token = beat_possible(player, opponent)
-    if throw_token:
+    if throw_token and player_throws:
         token, loc = throw_token, throw_action(throw_token, opponent, opponent_throws, colour) # multi-minimax: throw
-        throw(token, loc)
+        return throw(token, loc)        
     else:
         atype, old_loc, new_loc = swing_slide_action(player, opponent, colour) # multi-minimax: slide / swing
-        swing_slide_action(atype, old_loc, new_loc) 
+        return swing_slide_action(atype, old_loc, new_loc) 
 
 
 # |---------------------------------------------------------------------------|

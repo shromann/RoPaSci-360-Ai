@@ -32,8 +32,8 @@ class Player:
         self.colour = player
         self.state  = {"player": defaultdict(list), "opponent": defaultdict(list)}
         
-        self.player_throws   = 0
-        self.opponent_throws = 0
+        self.player_throws   = 9
+        self.opponent_throws = 9
 
 
     def action(self):
@@ -53,9 +53,9 @@ class Player:
         and player_action is this instance's latest chosen action.
         """
         if opponent_action[0] == 'THROW':
-            self.opponent_throws += 1
+            self.opponent_throws -= 1
         if player_action[0] == 'THROW':
-            self.player_throws   += 1
+            self.player_throws   -= 1
 
         self.state["player"]   = update_state(self.state["player"]  ,   player_action)
         self.state["opponent"] = update_state(self.state["opponent"], opponent_action)
