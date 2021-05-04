@@ -2,8 +2,6 @@ from XAEA_Xii.eval import beat_possible
 from XAEA_Xii.util import throw, slide, swing
 
 
-
-
 def throw_action(throw_token, opponenet, opponent_throws, colour):
     """
     Use multi-minimax to choose the best throw location
@@ -17,6 +15,7 @@ def swing_slide_action(player, opponenet, opponent_throws, colour):
     Use multi-minimax to choose best slide / swing
     return: atype (slide/swing), old_loc: (r0, q0), new_loc (r_1, q_1)
     """
+
 
 
 # |---------------------------------------------------------------------------|
@@ -48,7 +47,11 @@ def make_move(state, player_throws, opponent_throws, colour):
         return throw(token, loc)        
     else:
         atype, old_loc, new_loc = swing_slide_action(player, opponent, colour) # multi-minimax: slide / swing
-        return swing_slide_action(atype, old_loc, new_loc) 
+        if atype == "SLIDE":
+            return slide(old_loc, new_loc)
+        elif atype == "SWING":
+            return swing(old_loc, new_loc)
+        
 
 
 # |---------------------------------------------------------------------------|
