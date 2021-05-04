@@ -3,12 +3,10 @@ from XAEA_Xii.util import throw, slide, swing
 from XAEA_Xii.functions import out_of_board
 
 
-<<<<<<< HEAD
 def throw_action(throw_token, opponenet, opponent_throws, colour):
-=======
+    ...
 
 def throw_action(throw_token, opponent, opponent_throws, colour, state):
->>>>>>> 119a66ed07d06bbc12e53a8c9c63b8d93c5b92fe
     """
     Use multi-minimax to choose the best throw location
     return: loc (r, q)
@@ -81,17 +79,14 @@ def make_move(state, player_throws, opponent_throws, colour):
         token, loc = throw_token, throw_action(throw_token, opponent, opponent_throws, colour, state) # multi-minimax: throw
         return throw(token, loc)        
     else:
-<<<<<<< HEAD
         atype, old_loc, new_loc = swing_slide_action(player, opponent, colour) # multi-minimax: slide / swing
         if atype == "SLIDE":
             return slide(old_loc, new_loc)
         elif atype == "SWING":
             return swing(old_loc, new_loc)
         
-=======
         atype, old_loc, new_loc = swing_slide_action(player, opponent, colour, state) # multi-minimax: slide / swing
         return swing_slide_action(atype, old_loc, new_loc) 
->>>>>>> 119a66ed07d06bbc12e53a8c9c63b8d93c5b92fe
 
 
 # |---------------------------------------------------------------------------|
