@@ -1,5 +1,7 @@
 def play_rps(state_loc):
-    # polymorphic boi :)
+    """
+    Minimizez the hex at a particular location. The hex can have both upper and lowers tokens as well as its own type. 
+    """
     toks = ['r', 's', 'p']
     to_remove = []
     for t in range(3):
