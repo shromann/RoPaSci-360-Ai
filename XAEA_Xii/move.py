@@ -1,4 +1,4 @@
-from XAEA_Xii.eval import beat_possible
+from XAEA_Xii.eval import to_throw
 from XAEA_Xii.util import throw, slide, swing
 from XAEA_Xii.functions import out_of_board
 from XAEA_Xii.minimax import minimax
@@ -6,16 +6,78 @@ from XAEA_Xii.board import update_state
 import numpy as np
 from random import randint
 
-def throw_action(throw_token, depth, opponent, colour):
+def reflect(hex_loc, colour):
+
+def depth_dist(player_throws, colour, target, player, throw_token):
+
+  
+    print(player)
+    depth = 9 - player_throws
+    target_depth = target[0]
+
+    if   colour == 'lower':
+        low = -4
+        layer = low + depth
+        print(layer)
+        NO_LAND = [(r, q) for r, q in player.keys() if r == layer]
+
+    elif colour == 'upper':
+        low = 4
+        layer =  low - depth
+        print(layer)
+        NO_LAND = [(r, q) for r, q in player.keys() if r == layer]
+
+
+    # if we have target in the range of our depth, just throw on that hex and kill it ( for niow)
+    if layer == target_depth:
+        return abs(target_depth - layer), target    
+    
+    # otherwise, just get on the closest depth
+    else:
+        OPEN_LAND = []
+        for r in range(min(low, layer), max(low, layer)+1):
+
+
+        
+
+    
+
+    
+
+
+
+def throw_action(throw_token, player_throws, player, opponent, colour):
     """
     Use multi-minimax to choose the best throw location
     return: loc (r, q)
     """
-    if not opponent:
+    # first throw
+    if player_throws == 9:
         if   colour == 'lower':
             return (-4, randint(0, 4))
         elif colour == 'upper':
             return (4, -randint(0, 4))
+        
+    # throw when need sufficient tokens to win (multi-minimax)
+    """
+    goal: look for the closest-opponent's-opposite token is, and choose that hex.
+    """
+    toks = ['r', 's', 'p']
+    opp  = toks[(toks.index(throw_token)+1)%3]
+
+    possible_targets = [k for k, v in opponent.items() if opp in v]
+    print("possible targets:", possible_targets)
+    best_target      = None
+    closest_distance = np.inf
+    for target in possible_targets:
+        dist, hex_loc = depth_dist(player_throws, colour, target, player, throw_token)
+        if dist < closest_distance:
+            best_target      = target
+            closest_distance = dist
+
+
+
+    
 
 
 
@@ -66,25 +128,29 @@ Strategy:
 Comments: 
     - These are two differents minimax algorithm implementations. 
     - This method is better than using one single minimax because we minimise the width of the tree, making it easier to go deeper. 
+
+    have two choices: 
+        - go with this method
+        - make a new make_move where the throw is part of swing_slide multi-minimax
 """
 
-
 def make_move(state, player_throws, opponent_throws, colour):
-    """
-    Check if player has the right tokens to -beat-> opponenet
-        - no:
-            THROW
-        - yes:
-            SLIDE/SWING
-    """
+
+    # 'tokens' of the player (us) and opponent
     player = state["player"]
     opponent = state["opponent"]
 
-    throw_token = beat_possible(player, opponent, colour)
+    # 1. check if we are 'able' to beat opponent
+    
+    # 1.1 if we cant -> give token that can
+    throw_token = to_throw(player, opponent, colour, player_throws, opponent_throws)
+    
     if throw_token and player_throws:
-        token, loc = throw_token, throw_action(throw_token, 10-player_throws, opponent, colour) # multi-minimax: throw
+        token, loc = throw_token, throw_action(throw_token, player_throws, player, opponent, colour)
         return throw(token, loc)        
+    
     else:
+        # 1.2 if we can -> slide/swing with the ones we have
         atype, old_loc, new_loc = swing_slide_action(player, opponent, state) # multi-minimax: slide / swing
         if   atype == "SWING":
             return swing(old_loc, new_loc)
