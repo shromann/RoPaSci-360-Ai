@@ -4,9 +4,12 @@ from XAEA_Xii.functions import out_of_board
 from XAEA_Xii.minimax import minimax
 from XAEA_Xii.board import update_state
 import numpy as np
+<<<<<<< HEAD
 
 def throw_action(throw_token, opponenet, opponent_throws, colour):
     ...
+=======
+>>>>>>> 11bf8c3c51c791a267759f78cae13cbb5210d6cd
 
 def throw_action(throw_token, opponent, opponent_throws, colour, state):
     """
@@ -14,7 +17,7 @@ def throw_action(throw_token, opponent, opponent_throws, colour, state):
     return: loc (r, q)
     """
 
-def swing_slide_action(player, opponent, opponent_throws, colour, state):
+def swing_slide_action(player, opponent, state):
     """
     Use multi-minimax to choose best slide / swing
     return: atype (slide/swing), old_loc: (r0, q0), new_loc (r_1, q_1)
@@ -27,16 +30,18 @@ def swing_slide_action(player, opponent, opponent_throws, colour, state):
     move_to_make = 0
     max_move = -np.inf
     alpha = -np.inf
+    depth = 3
     for child in player_queue:
         player_new_loc = child[0]
         player_old_loc = child[1]
-        # Change based on how to update state
-        state = update_state(state, player_loc, player_type)
+
+        action = (child[3], player_old_loc, player_new_loc)
+        state = update_state(state, action)
         min_move = np.inf
         beta = np.inf
         for opp in opponent_queue:
             opponent_loc = opp[0]
-            min_move = min(min_move, minimax(player_loc, opponent_loc, depth-1, alpha, beta, False, state))
+            min_move = min(min_move, minimax(player_new_loc, opponent_loc, depth-1, alpha, beta, False, state))
             beta = min_move
             if alpha >= beta:
                 break
@@ -44,9 +49,10 @@ def swing_slide_action(player, opponent, opponent_throws, colour, state):
             move_to_make = child
             max_move = min_move
             alpha = max_move
-    
+    print(move_to_make)
     #move_to_make is of form (new location, old location, type of token, move type)
-    return (move_to_make[3], move_to_make[1], move_to_make[0])
+    #return (move_to_make[3], move_to_make[1], move_to_make[0])
+    return ("SWING", (0,0), (0,0))
     
 
 
@@ -79,14 +85,11 @@ def make_move(state, player_throws, opponent_throws, colour):
         token, loc = throw_token, throw_action(throw_token, opponent, opponent_throws, colour, state) # multi-minimax: throw
         return throw(token, loc)        
     else:
-        atype, old_loc, new_loc = swing_slide_action(player, opponent, colour) # multi-minimax: slide / swing
-        if atype == "SLIDE":
-            return slide(old_loc, new_loc)
-        elif atype == "SWING":
-            return swing(old_loc, new_loc)
-        
-        atype, old_loc, new_loc = swing_slide_action(player, opponent, colour, state) # multi-minimax: slide / swing
-        return swing_slide_action(atype, old_loc, new_loc) 
+        atype, old_loc, new_loc = swing_slide_action(player, opponent, state) # multi-minimax: slide / swing
+        if atype == "SWING":
+            swing(old_loc, new_loc)
+        else:
+            slide(old_loc, new_loc) 
 
 
 # |---------------------------------------------------------------------------|
@@ -102,7 +105,7 @@ def generate_children(dictionary):
     # Find each adjacent hex to each hex in our dictionary and add the new hex to suggestions
     for loc in dictionary.keys():
         hex_suggestions = []
-        
+
         for value in adjacent_squares.values():
             new_loc = (loc[0] + value[0], loc[1] + value[1])
             if not out_of_board(new_loc):
