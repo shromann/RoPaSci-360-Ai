@@ -29,11 +29,13 @@ def swing_slide_action(player, opponent, opponent_throws, colour, state):
     move_to_make = 0
     max_move = -np.inf
     alpha = -np.inf
+    depth = 3
     for child in player_queue:
         player_new_loc = child[0]
         player_old_loc = child[1]
-        # Change based on how to update state
-        state = update_state(state, player_loc, player_type)
+
+        action = (child[3], player_old_loc, player_new_loc)
+        state = update_state(state, action)
         min_move = np.inf
         beta = np.inf
         for opp in opponent_queue:
@@ -104,7 +106,7 @@ def generate_children(dictionary):
     # Find each adjacent hex to each hex in our dictionary and add the new hex to suggestions
     for loc in dictionary.keys():
         hex_suggestions = []
-        
+
         for value in adjacent_squares.values():
             new_loc = (loc[0] + value[0], loc[1] + value[1])
             if not out_of_board(new_loc):
