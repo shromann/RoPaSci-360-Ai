@@ -32,8 +32,6 @@ def swing_slide_action(player, opponent, opponent_throws, colour, state):
     for child in player_queue:
         player_new_loc = child[0]
         player_old_loc = child[1]
-        player_type = child[2]
-
         # Change based on how to update state
         state = update_state(state, player_loc, player_type)
         min_move = np.inf
@@ -48,7 +46,9 @@ def swing_slide_action(player, opponent, opponent_throws, colour, state):
             move_to_make = child
             max_move = min_move
             alpha = max_move
-    return ("SLIDE", move_to_make[1], move_to_make[0])
+    
+    #move_to_make is of form (new location, old location, type of token, move type)
+    return (move_to_make[3], move_to_make[1], move_to_make[0])
     
 
 
@@ -98,24 +98,26 @@ def generate_children(dictionary):
     "UR":(1, 0), "UL":(+1, -1), "L":(0, -1), 
     "DL":(-1, 0), "DR":(-1, +1), "R":(0, +1)}
     
-    # In the move_suggestions will be tuples of (newlocation, oldlocation, type of token)
-    moves_suggestions = []
-    queue = dictionary.keys()
+    # In the move_suggestions will be tuples of (new location, old location, type of token, move type)
+    final_moves_suggestions = []
 
-    # Need to remove duplicate suggestions eg a hex is slide and swing away from curr hex
+    # Find each adjacent hex to each hex in our dictionary and add the new hex to suggestions
     for loc in dictionary.keys():
-        #loc = dictionary[0]
+        hex_suggestions = []
+        
         for value in adjacent_squares.values():
             new_loc = (loc[0] + value[0], loc[1] + value[1])
-
             if not out_of_board(new_loc):
-                moves_suggestions.append(new_loc, loc, dictionary[loc])
-            
+                final_moves_suggestions.append(new_loc, loc, dictionary[loc], "SLIDE")
+                hex_suggestions.append(new_loc)
+                
+                # If a new hex is already in our keys, that means it is the location of one of our tokens and we can use it to swing
                 if new_loc in dictionary.keys():
                     for values in adjacent_squares.values():
                         swing_loc = (new_loc[0] + values[0], new_loc[1] + values[1])
+                        
+                        # If swing_loc is in hex_suggestions that means that location is already slidable so doesnt need to be included
+                        if not out_of_board(swing_loc) and swing_loc not in hex_suggestions:
+                            final_moves_suggestions.append(swing_loc, loc, dictionary[loc], "SWING")
 
-                        if not out_of_board(swing_loc):
-                            moves_suggestions.append(swing_loc, loc, dictionary[loc])
-
-    return move_suggestions
+    return final_move_suggestions
