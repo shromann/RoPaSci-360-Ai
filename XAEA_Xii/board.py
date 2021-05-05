@@ -35,3 +35,19 @@ def update_state(state, action):
 
 
 
+# INCASE 
+# def eval(player, old_state, new_state):
+#     if   player == 'lower':
+#         ro, pa, sci = 'R', 'P', 'S'
+#     elif player == 'upper':
+#         ro, pa, sci = 'r', 'p', 's'
+    
+#     if ro in old_state or pa in old_state or sci in old_state:
+#         if not (ro in new_state or pa in new_state or sci in new_state):
+#             return 1
+    
+
+
+    
+
+

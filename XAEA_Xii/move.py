@@ -3,7 +3,7 @@ from XAEA_Xii.util import throw, slide, swing
 from XAEA_Xii.functions import out_of_board
 from XAEA_Xii.minimax import minimax
 from XAEA_Xii.board import update_state
-
+import numpy as np
 
 def throw_action(throw_token, opponenet, opponent_throws, colour):
     ...
@@ -13,8 +13,6 @@ def throw_action(throw_token, opponent, opponent_throws, colour, state):
     Use multi-minimax to choose the best throw location
     return: loc (r, q)
     """
-    
-    
 
 def swing_slide_action(player, opponent, opponent_throws, colour, state):
     """
@@ -120,4 +118,4 @@ def generate_children(dictionary):
                         if not out_of_board(swing_loc) and swing_loc not in hex_suggestions:
                             final_moves_suggestions.append(swing_loc, loc, dictionary[loc], "SWING")
 
-    return final_move_suggestions
+    return final_moves_suggestions
