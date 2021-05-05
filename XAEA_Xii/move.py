@@ -4,18 +4,20 @@ from XAEA_Xii.functions import out_of_board
 from XAEA_Xii.minimax import minimax
 from XAEA_Xii.board import update_state
 import numpy as np
-<<<<<<< HEAD
+from random import randint
 
-def throw_action(throw_token, opponenet, opponent_throws, colour):
-    ...
-=======
->>>>>>> 11bf8c3c51c791a267759f78cae13cbb5210d6cd
-
-def throw_action(throw_token, opponent, opponent_throws, colour, state):
+def throw_action(throw_token, depth, opponent, colour):
     """
     Use multi-minimax to choose the best throw location
     return: loc (r, q)
     """
+    if not opponent:
+        if   colour == 'lower':
+            return (-4, randint(0, 4))
+        elif colour == 'upper':
+            return (4, -randint(0, 4))
+
+
 
 def swing_slide_action(player, opponent, state):
     """
@@ -55,8 +57,6 @@ def swing_slide_action(player, opponent, state):
     return ("SWING", (0,0), (0,0))
     
 
-
-
 # |---------------------------------------------------------------------------|
 """
 Strategy:
@@ -80,16 +80,16 @@ def make_move(state, player_throws, opponent_throws, colour):
     player = state["player"]
     opponent = state["opponent"]
 
-    throw_token = beat_possible(player, opponent)
+    throw_token = beat_possible(player, opponent, colour)
     if throw_token and player_throws:
-        token, loc = throw_token, throw_action(throw_token, opponent, opponent_throws, colour, state) # multi-minimax: throw
+        token, loc = throw_token, throw_action(throw_token, 10-player_throws, opponent, colour) # multi-minimax: throw
         return throw(token, loc)        
     else:
         atype, old_loc, new_loc = swing_slide_action(player, opponent, state) # multi-minimax: slide / swing
-        if atype == "SWING":
-            swing(old_loc, new_loc)
-        else:
-            slide(old_loc, new_loc) 
+        if   atype == "SWING":
+            return swing(old_loc, new_loc)
+        elif atype == "SLIDE":
+            return slide(old_loc, new_loc) 
 
 
 # |---------------------------------------------------------------------------|
