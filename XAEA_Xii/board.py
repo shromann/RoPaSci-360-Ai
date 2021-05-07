@@ -33,8 +33,9 @@ def update_player_state(state, action):
 
     return state
 
+
+# state = {"player":{}, "opponenet":{}}
+
 def update_state(state, action):
     
-    state["player"]   = update_player_state(state["player"]  ,   action)
-    state["opponent"] = update_player_state(state["opponent"],   action)
-    return state
+    ...

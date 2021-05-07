@@ -12,7 +12,6 @@ def first_throw(colour):
         loc =  (-4, randint(0, 4))
     elif colour == 'upper':
         loc = (4, -randint(0, 4))
-
     return throw(tok, loc)
         
 
@@ -31,7 +30,7 @@ def swing_slide_throw(player, opponent, state):
         player_new_loc = child[0]
         player_old_loc = child[1]
         action = (child[3], player_old_loc, player_new_loc)
-        state = update_state(state, action, "player")
+        state = update_state(state, action)
         min_move = np.inf
         beta = np.inf
         for opp in opponent_queue:
@@ -44,8 +43,6 @@ def swing_slide_throw(player, opponent, state):
             move_to_make = child
             max_move = min_move
             alpha = max_move
-
-    print(move_to_make)
     #move_to_make is of form (new location, old location, type of token, move type)
     return (move_to_make[3], move_to_make[1], move_to_make[0])
 
@@ -56,19 +53,6 @@ def swing_slide_throw(player, opponent, state):
     
 
 # |---------------------------------------------------------------------------|
-"""
-Strategy:
-    - IF I can't win, then throw the right token
-    - IF I can win, then move to a better state
-
-Comments: 
-    - These are two differents minimax algorithm implementations. 
-    - This method is better than using one single minimax because we minimise the width of the tree, making it easier to go deeper. 
-
-    have two choices: 
-        - go with this method
-        - make a new make_move where the throw is part of swing_slide multi-minimax
-"""
 
 def make_move(state, player_throws, opponent_throws, colour):
     """
@@ -77,6 +61,7 @@ def make_move(state, player_throws, opponent_throws, colour):
         - post first-throw => multi-minimax 
     """
     
+    
     player = state["player"]
     opponent = state["opponent"]
     
@@ -84,6 +69,7 @@ def make_move(state, player_throws, opponent_throws, colour):
     if player_throws == 9 and opponent_throws == 9:
         return first_throw(colour)      
     
+
     # post first-throw => multi-minimax 
     return swing_slide_throw(player, opponent, state) 
     
@@ -116,6 +102,6 @@ def generate_children(dictionary):
                         
                         # If swing_loc is in hex_suggestions that means that location is already slidable so doesnt need to be included
                         if not out_of_board(swing_loc) and swing_loc not in hex_suggestions:
-                            final_moves_suggestions.append(swing_loc, loc, dictionary[loc], "SWING")
+                            final_moves_suggestions.append((swing_loc, loc, dictionary[loc], "SWING"))
 
     return final_moves_suggestions
