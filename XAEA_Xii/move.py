@@ -6,6 +6,32 @@ import numpy as np
 from random import randint
 
 
+# |------------------------------- make move ---------------------------------|
+
+def make_move(state, player_throws, opponent_throws, colour):
+    """
+    LOGIC:
+        - first throw      => random token & random depth:1 hex location
+        - post first-throw => multi-minimax 
+    """
+    
+    
+    player = state["player"]
+    opponent = state["opponent"]
+    
+    # first throw => random token & random depth:1 hex location
+    if player_throws == 9 and opponent_throws == 9:
+        return first_throw(colour)      
+    
+
+    # post first-throw => multi-minimax 
+    return swing_slide_throw(player, opponent, state) 
+    
+
+
+# |---------------------------------------------------------------------------|
+
+# protocol for first throw
 def first_throw(colour):
     tok = ['r', 'p', 's'][randint(0,2)]
     if   colour == 'lower':
@@ -35,7 +61,7 @@ def swing_slide_throw(player, opponent, state):
         beta = np.inf
         for opp in opponent_queue:
             opponent_loc = opp[0]
-            min_move = min(min_move, minimax(player_new_loc, opponent_loc, depth-1, alpha, beta, False, state))
+            min_move = min(min_move, minimax((player_new_loc), (opponent_loc), depth-1, alpha, beta, False, state))
             beta = min_move
             if alpha >= beta:
                 break
@@ -46,37 +72,8 @@ def swing_slide_throw(player, opponent, state):
     #move_to_make is of form (new location, old location, type of token, move type)
     return (move_to_make[3], move_to_make[1], move_to_make[0])
 
-    """
-    just use 'return slide(...)' or smth like that instead
-    """
-    # return swing((0,0), (0,0))
-    
 
-# |---------------------------------------------------------------------------|
-
-def make_move(state, player_throws, opponent_throws, colour):
-    """
-    LOGIC:
-        - first throw      => random token & random depth:1 hex location
-        - post first-throw => multi-minimax 
-    """
     
-    
-    player = state["player"]
-    opponent = state["opponent"]
-    
-    # first throw => random token & random depth:1 hex location
-    if player_throws == 9 and opponent_throws == 9:
-        return first_throw(colour)      
-    
-
-    # post first-throw => multi-minimax 
-    return swing_slide_throw(player, opponent, state) 
-    
-
-
-# |---------------------------------------------------------------------------|
-
 def generate_children(dictionary):
     adjacent_squares = {
     "UR":(1, 0), "UL":(+1, -1), "L":(0, -1), 
@@ -104,4 +101,5 @@ def generate_children(dictionary):
                         if not out_of_board(swing_loc) and swing_loc not in hex_suggestions:
                             final_moves_suggestions.append((swing_loc, loc, dictionary[loc], "SWING"))
 
+    
     return final_moves_suggestions

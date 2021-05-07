@@ -16,7 +16,7 @@ def play_rps(state_loc):
     return state_loc            
 
 
-def update_player_state(state, action):
+def update_state(state, action):
 
     mv_type = action[0]
     loc     = action[2]
@@ -24,18 +24,16 @@ def update_player_state(state, action):
     if mv_type == 'THROW':
         token = action[1]
     elif mv_type in ['SLIDE', 'SWING']:
-        token = state[action[1]].pop()
-        if  not state[action[1]]:
-            del state[action[1]]
-    
+        if action[1] in state.keys():
+            token = state[action[1]].pop()
+            if  not state[action[1]]:
+                del state[action[1]]
+        else:
+            return state
+
     state[loc].append(token)
     state[loc] = play_rps(state[loc]) # minimize
 
     return state
-
-
-# state = {"player":{}, "opponenet":{}}
-
-def update_state(state, action):
     
-    ...
+#     ...
