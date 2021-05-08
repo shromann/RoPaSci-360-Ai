@@ -33,5 +33,9 @@ class Player:
 
         self.state["player"]   = update_player_state(self.state["player"]  ,   player_action)
         self.state["opponent"] = update_player_state(self.state["opponent"], opponent_action)
+<<<<<<< HEAD
 
 
+=======
+        
+>>>>>>> parent of bce3c3c... before the big change

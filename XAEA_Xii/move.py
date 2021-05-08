@@ -5,6 +5,7 @@ from random import randint
 import numpy as np
 
 
+<<<<<<< HEAD
 # |------------------------------- make move ---------------------------------|
 
 def make_move(state, player_throws, opponent_throws, colour):
@@ -21,6 +22,16 @@ def make_move(state, player_throws, opponent_throws, colour):
     return swing_slide_throw(player, opponent, state) 
 
 # |---------------------------------------------------------------------------|
+=======
+def first_throw(colour):
+    tok = ['r', 'p', 's'][randint(0,2)]
+    if   colour == 'lower':
+        loc =  (-4, randint(0, 4))
+    elif colour == 'upper':
+        loc = (4, -randint(0, 4))
+    return throw(tok, loc)
+        
+>>>>>>> parent of bce3c3c... before the big change
 
 def swing_slide_throw(player, opponent, state):
 
@@ -38,9 +49,14 @@ def swing_slide_throw(player, opponent, state):
         min_move = np.inf
         beta = np.inf
         for opp in opponent_queue:
+<<<<<<< HEAD
             opponent_action = opp
             print(child, opp )
             min_move = min(min_move, minimax((child), (opp), depth-1, alpha, beta, False, state))
+=======
+            opponent_loc = opp[0]
+            min_move = min(min_move, minimax(player_new_loc, opponent_loc, depth-1, alpha, beta, False, state))
+>>>>>>> parent of bce3c3c... before the big change
             beta = min_move
             if alpha >= beta:
                 break
@@ -51,6 +67,7 @@ def swing_slide_throw(player, opponent, state):
 
     return (move_to_make[3], move_to_make[1], move_to_make[0])
 
+<<<<<<< HEAD
 # |---------------------------------------------------------------------------|
 
 def make_move(state, player_throws, opponent_throws, colour):
@@ -61,6 +78,38 @@ def make_move(state, player_throws, opponent_throws, colour):
     if player_throws == 9 and opponent_throws == 9:
         return first_throw(colour)      
     
+=======
+    """
+    just use 'return slide(...)' or smth like that instead
+    """
+    # return swing((0,0), (0,0))
+    
+
+# |---------------------------------------------------------------------------|
+
+def make_move(state, player_throws, opponent_throws, colour):
+    """
+    LOGIC:
+        - first throw      => random token & random depth:1 hex location
+        - post first-throw => multi-minimax 
+    """
+    
+    
+    player = state["player"]
+    opponent = state["opponent"]
+    
+    # first throw => random token & random depth:1 hex location
+    if player_throws == 9 and opponent_throws == 9:
+        return first_throw(colour)      
+    
+
+    # post first-throw => multi-minimax 
+    return swing_slide_throw(player, opponent, state) 
+    
+
+
+# |---------------------------------------------------------------------------|
+>>>>>>> parent of bce3c3c... before the big change
 
 def generate_children(dictionary):
     adjacent_squares = {
@@ -85,6 +134,7 @@ def generate_children(dictionary):
                         
                         # If swing_loc is in hex_suggestions that means that location is already slidable so doesnt need to be included
                         if not out_of_board(swing_loc) and swing_loc not in hex_suggestions:
+<<<<<<< HEAD
                             final_moves_suggestions.append(swing(loc, swing_loc))
     
     return final_moves_suggestions
@@ -96,3 +146,8 @@ def first_throw(colour):
     elif colour == 'upper':
         loc = (4, -randint(0, 4))
     return throw(tok, loc)
+=======
+                            final_moves_suggestions.append((swing_loc, loc, dictionary[loc], "SWING"))
+
+    return final_moves_suggestions
+>>>>>>> parent of bce3c3c... before the big change
