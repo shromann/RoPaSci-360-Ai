@@ -8,7 +8,7 @@ from random import randint
 
 # |------------------------------- make move ---------------------------------|
 
-def make_move(state, player_throws, opponent_throws, colour):
+def make_move(Player, state, player_throws, opponent_throws, colour):
     """
     LOGIC:
         - first throw      => random token & random depth:1 hex location
@@ -25,7 +25,7 @@ def make_move(state, player_throws, opponent_throws, colour):
     
 
     # post first-throw => multi-minimax 
-    return swing_slide_throw(player, opponent, state) 
+    return swing_slide_throw(Player, player, opponent, state) 
     
 
 
@@ -41,27 +41,24 @@ def first_throw(colour):
     return throw(tok, loc)
         
 
-def swing_slide_throw(player, opponent, state):
+def swing_slide_throw(Player, player, opponent, state):
 
     # Only implemented slides so far
     player_queue = generate_children(player)
     opponent_queue = generate_children(opponent)
     
     # This is multiminimax
-    move_to_make = 0
+    move_to_make = None
     max_move = -np.inf
     alpha = -np.inf
     depth = 3
     for child in player_queue:
-        player_new_loc = child[0]
-        player_old_loc = child[1]
-        action = (child[3], player_old_loc, player_new_loc)
-        state = update_state(state, action)
+        state = update_state(state, child)
         min_move = np.inf
         beta = np.inf
         for opp in opponent_queue:
             opponent_loc = opp[0]
-            min_move = min(min_move, minimax((player_new_loc), (opponent_loc), depth-1, alpha, beta, False, state))
+            min_move = min(min_move, minimax(Player, [child], [opp], depth-1, alpha, beta, False, state))
             beta = min_move
             if alpha >= beta:
                 break
@@ -70,10 +67,9 @@ def swing_slide_throw(player, opponent, state):
             max_move = min_move
             alpha = max_move
     #move_to_make is of form (new location, old location, type of token, move type)
-    return (move_to_make[3], move_to_make[1], move_to_make[0])
+    return move_to_make
 
 
-    
 def generate_children(dictionary):
     adjacent_squares = {
     "UR":(1, 0), "UL":(+1, -1), "L":(0, -1), 
@@ -89,7 +85,7 @@ def generate_children(dictionary):
         for value in adjacent_squares.values():
             new_loc = (loc[0] + value[0], loc[1] + value[1])
             if not out_of_board(new_loc):
-                final_moves_suggestions.append((new_loc, loc, dictionary[loc], "SLIDE"))
+                final_moves_suggestions.append(slide(loc, new_loc))
                 hex_suggestions.append(new_loc)
                 
                 # If a new hex is already in our keys, that means it is the location of one of our tokens and we can use it to swing
@@ -99,7 +95,6 @@ def generate_children(dictionary):
                         
                         # If swing_loc is in hex_suggestions that means that location is already slidable so doesnt need to be included
                         if not out_of_board(swing_loc) and swing_loc not in hex_suggestions:
-                            final_moves_suggestions.append((swing_loc, loc, dictionary[loc], "SWING"))
-
+                           final_moves_suggestions.append(swing(loc, swing_loc))
     
     return final_moves_suggestions
