@@ -1,5 +1,33 @@
+def update_player_state(state, action):
+
+    mv_type = action[0]
+    loc     = action[2]
+
+    if mv_type == 'THROW':
+        token = action[1]
+    elif mv_type in ['SLIDE', 'SWING']:
+        if action[1] in state.keys():
+            token = state[action[1]].pop()
+            if not state[action[1]]:
+                del state[action[1]]
+        else:
+            return state
+
+    print(state, action)
+    state[loc].append(token)
+    state[loc] = play_rps(state[loc]) # minimize
+
+    return state
+
+def update_state(state, action):
+
+    state['player'] = update_player_state(state['player'], action)
+    state['opponent'] = update_player_state(state['opponent'], action)
+
+    return state
+
+    
 def play_rps(state_loc):
-    # Minimizez the hex at a particular location. The hex can have both upper and lowers tokens as well as its own type. 
     
     toks = ['r', 's', 'p']
     to_remove = []
@@ -13,27 +41,6 @@ def play_rps(state_loc):
         
     for r in to_remove:
         state_loc = list(filter(lambda t: t != r, state_loc))
+
     return state_loc            
 
-
-def update_state(state, action):
-
-    mv_type = action[0]
-    loc     = action[2]
-
-    if mv_type == 'THROW':
-        token = action[1]
-    elif mv_type in ['SLIDE', 'SWING']:
-        if action[1] in state.keys():
-            token = state[action[1]].pop()
-            if  not state[action[1]]:
-                del state[action[1]]
-        else:
-            return state
-
-    state[loc].append(token)
-    state[loc] = play_rps(state[loc]) # minimize
-
-    return state
-    
-#     ...
