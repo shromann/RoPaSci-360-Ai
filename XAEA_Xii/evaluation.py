@@ -30,31 +30,32 @@ def check_invincible(board_state):
     return diff_in_invincible
 
 def evaluation(max_player, min_player, depth, alpha, beta, is_max, game_state):
-    throw_weight = 2
-    on_board_weight = 1
-    num_captures_weight = 1
-    #closest_capture = 0.2
-    opp_num_tokens = len(game_state['opponent'].values())
-    player_num_tokens = len(game_state['player'].values())
-    diff_in_tokens = player_num_tokens - opp_num_tokens
-    diff_in_throws = self.player_throws - self.opponent_throws
-    num_captures =  (self.opponent_throws - opp_num_tokens)
+    return 0 
+    # throw_weight = 2
+    # on_board_weight = 1
+    # num_captures_weight = 1
+    # #closest_capture = 0.2
+    # opp_num_tokens = len(game_state['opponent'].values())
+    # player_num_tokens = len(game_state['player'].values())
+    # diff_in_tokens = player_num_tokens - opp_num_tokens
+    # diff_in_throws = self.player_throws - self.opponent_throws
+    # num_captures =  (self.opponent_throws - opp_num_tokens)
 
-    # board state where both players have no throws so invincible tokens are truly invincible
-    if self.player_throws == 0 and self.opponent_throws == 0:
-        invincible_weight = 10
+    # # board state where both players have no throws so invincible tokens are truly invincible
+    # if self.player_throws == 0 and self.opponent_throws == 0:
+    #     invincible_weight = 10
 
-    # board state where opponent has no throws but player does have
-    elif self.opponent_throws == 0:
-        # If they currently have a more invinvible tokens but we can throw opposite type to negate so half the weight
-        if check_invincible < 0:
-            invincible_weight = 5
+    # # board state where opponent has no throws but player does have
+    # elif self.opponent_throws == 0:
+    #     # If they currently have a more invinvible tokens but we can throw opposite type to negate so half the weight
+    #     if check_invincible < 0:
+    #         invincible_weight = 5
     
-    elif self.player_throws == 0:
-        # If they currently have a more invinvible tokens but we can throw opposite type to negate so half the weight
-        if check_invincible > 0:
-            invincible_weight = 5
-    else:
-        invincible_weight = 5
-    diff_in_invin = check_invincible(game_state)
-    return invincible_weight(diff_in_invin) + throw_weight(diff_in_throw) + on_board_weight(diff_in_tokens) + num_captures_weight(num_captures) 
+    # elif self.player_throws == 0:
+    #     # If they currently have a more invinvible tokens but we can throw opposite type to negate so half the weight
+    #     if check_invincible > 0:
+    #         invincible_weight = 5
+    # else:
+    #     invincible_weight = 5
+    # diff_in_invin = check_invincible(game_state)
+    # return invincible_weight(diff_in_invin) + throw_weight(diff_in_throw) + on_board_weight(diff_in_tokens) + num_captures_weight(num_captures) 

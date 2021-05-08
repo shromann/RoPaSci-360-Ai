@@ -12,7 +12,6 @@ def first_throw(colour):
     elif colour == 'upper':
         loc = (4, -randint(0, 4))
     return throw(tok, loc)
-        
 
 def swing_slide_throw(player, opponent, state):
 
@@ -30,13 +29,8 @@ def swing_slide_throw(player, opponent, state):
         min_move = np.inf
         beta = np.inf
         for opp in opponent_queue:
-<<<<<<< HEAD
             opponent_action = opp
-            min_move = min(min_move, minimax((child), (opp), depth-1, alpha, beta, False, state))
-=======
-            opponent_loc = opp[0]
-            min_move = min(min_move, minimax(player_new_loc, opponent_loc, depth-1, alpha, beta, False, state))
->>>>>>> parent of bce3c3c... before the big change
+            min_move = min(min_move, minimax([child], [opp], depth-1, alpha, beta, False, state))
             beta = min_move
             if alpha >= beta:
                 break
@@ -45,7 +39,7 @@ def swing_slide_throw(player, opponent, state):
             max_move = min_move
             alpha = max_move
 
-    return (move_to_make[3], move_to_make[1], move_to_make[0])
+    return move_to_make
 
     """
     just use 'return slide(...)' or smth like that instead
@@ -75,7 +69,6 @@ def make_move(state, player_throws, opponent_throws, colour):
     return swing_slide_throw(player, opponent, state) 
     
 
-<<<<<<< HEAD
 # |---------------------------------------------------------------------------|
 
 def make_move(state, player_throws, opponent_throws, colour):
@@ -98,8 +91,6 @@ def make_move(state, player_throws, opponent_throws, colour):
     return swing_slide_throw(player, opponent, state) 
     
 
-=======
->>>>>>> parent of bce3c3c... before the big change
 
 # |---------------------------------------------------------------------------|
 
@@ -128,8 +119,4 @@ def generate_children(dictionary):
                         if not out_of_board(swing_loc) and swing_loc not in hex_suggestions:
                             final_moves_suggestions.append((swing_loc, loc, dictionary[loc], "SWING"))
 
-<<<<<<< HEAD
     return final_moves_suggestions
-=======
-    return final_moves_suggestions
->>>>>>> parent of bce3c3c... before the big change

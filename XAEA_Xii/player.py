@@ -17,7 +17,6 @@ class Player:
 
         return make_move(self.state, self.player_throws, self.opponent_throws, self.colour)
 
-
     def update(self, opponent_action, player_action):
 
         if opponent_action[0] == 'THROW':
@@ -27,8 +26,4 @@ class Player:
 
         self.state["player"]   = update_player_state(self.state["player"]  ,   player_action)
         self.state["opponent"] = update_player_state(self.state["opponent"], opponent_action)
-<<<<<<< HEAD
         
-=======
-        
->>>>>>> parent of bce3c3c... before the big change
