@@ -39,6 +39,7 @@ def swing_slide_throw(player, opponent, state):
         beta = np.inf
         for opp in opponent_queue:
             opponent_action = opp
+            print(child, opp )
             min_move = min(min_move, minimax((child), (opp), depth-1, alpha, beta, False, state))
             beta = min_move
             if alpha >= beta:
@@ -47,19 +48,27 @@ def swing_slide_throw(player, opponent, state):
             move_to_make = child
             max_move = min_move
             alpha = max_move
-    #move_to_make is of form (new location, old location, type of token, move type)
+
     return (move_to_make[3], move_to_make[1], move_to_make[0])
 
+# |---------------------------------------------------------------------------|
+
+def make_move(state, player_throws, opponent_throws, colour):
+    
+    player = state["player"]
+    opponent = state["opponent"]
+    
+    if player_throws == 9 and opponent_throws == 9:
+        return first_throw(colour)      
+    
 
 def generate_children(dictionary):
     adjacent_squares = {
     "UR":(1, 0), "UL":(+1, -1), "L":(0, -1), 
     "DL":(-1, 0), "DR":(-1, +1), "R":(0, +1)}
-    
-    # In the move_suggestions will be tuples of (new location, old location, type of token, move type)
+        
     final_moves_suggestions = []
 
-    # Find each adjacent hex to each hex in our dictionary and add the new hex to suggestions
     for loc in dictionary.keys():
         hex_suggestions = []
 
@@ -77,7 +86,6 @@ def generate_children(dictionary):
                         # If swing_loc is in hex_suggestions that means that location is already slidable so doesnt need to be included
                         if not out_of_board(swing_loc) and swing_loc not in hex_suggestions:
                             final_moves_suggestions.append(swing(loc, swing_loc))
-
     
     return final_moves_suggestions
 
