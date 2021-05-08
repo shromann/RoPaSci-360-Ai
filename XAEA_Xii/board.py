@@ -24,7 +24,7 @@ def update_player_state(state, action):
     if mv_type == 'THROW':
         token = action[1]
     elif mv_type in ['SLIDE', 'SWING']:
-
+        # print(action[1], state)
         if action[1] in state.keys():
             token = state[action[1]].pop()
             if not state[action[1]]:
@@ -56,12 +56,11 @@ def play_game(state):
 
     if overlaps:    
         for o in overlaps:
-            feild = play_rps(player[o] + opponent[o])
-        
-        if feild[0] in player[o]:
-            opponent[o] = []
-        if feild[0] in opponent[o]:
-            player[o] = [] 
+            feild = play_rps(player[o] + opponent[o])       
+            if feild in player[o]:
+                del opponent[o]
+            if feild in opponent[o]:
+                del player[o]
      
     return state
 

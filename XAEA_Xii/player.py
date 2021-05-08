@@ -17,8 +17,15 @@ class Player:
     def action(self):    
 
         state = copy.deepcopy(self.state)
+        player_throws = copy.deepcopy(self.player_throws)
+        opponent_throws = copy.deepcopy(self.opponent_throws)
+
         action = make_move(self.state, self.player_throws, self.opponent_throws, self.colour)
+
         self.state = state
+        self.player_throws = player_throws
+        self.opponent_throws = opponent_throws
+
         return action
 
     def update(self, opponent_action, player_action):
@@ -28,7 +35,6 @@ class Player:
         if player_action[0] == 'THROW':
             self.player_throws   -= 1
 
-        print(self.state)
         self.state["player"]   = update_player_state(self.state["player"]  ,   player_action)
         self.state["opponent"] = update_player_state(self.state["opponent"], opponent_action)
         self.state = play_game(self.state)
