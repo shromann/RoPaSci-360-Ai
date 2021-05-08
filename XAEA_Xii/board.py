@@ -16,9 +16,8 @@ def play_rps(state_loc):
     return state_loc            
 
 
-def update_player_state(state, action):
- 
-   
+def update_state(state, action):
+
     mv_type = action[0]
     loc     = action[2]
 
@@ -37,9 +36,4 @@ def update_player_state(state, action):
 
     return state
     
-def update_state(state, action):
-
-    state['player'] = update_player_state(state['player'], action)
-    state['opponent'] = update_player_state(state['opponent'], action)
-
-    return state
+#     ...
