@@ -21,6 +21,7 @@ def out_of_board(location):
     elif location[0] == 1 and (location[1] > 3 or location[1] < -4):
         return True
     elif location[0] == 2 and (location[1] > 2 or location[1] < -4):
+        
         return True
     elif location[0] == 3 and (location[1] > 1 or location[1] < -4):
         return True

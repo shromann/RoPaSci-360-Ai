@@ -4,13 +4,7 @@ from XAEA_Xii.move import make_move
 from collections import defaultdict
 
 class Player:
-    """
-    Internal Representation:
-        dictionary: 
-            - Key: (r, q)
-            - Value: "atype"
-    """
-
+    
     def __init__(self, player):
 
         self.colour = player
@@ -33,9 +27,3 @@ class Player:
 
         self.state["player"]   = update_player_state(self.state["player"]  ,   player_action)
         self.state["opponent"] = update_player_state(self.state["opponent"], opponent_action)
-<<<<<<< HEAD
-
-
-=======
-        
->>>>>>> parent of bce3c3c... before the big change
