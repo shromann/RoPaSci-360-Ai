@@ -2,6 +2,7 @@ from XAEA_Xii.util import throw, slide, swing, out_of_board
 from XAEA_Xii.board import update_state
 from XAEA_Xii.minimax import minimax
 from random import randint
+import copy
 import numpy as np
 
 
@@ -40,13 +41,6 @@ def swing_slide_throw(player, opponent, state):
             alpha = max_move
 
     return move_to_make
-
-    """
-    just use 'return slide(...)' or smth like that instead
-    """
-    # return swing((0,0), (0,0))
-    
-
 # |---------------------------------------------------------------------------|
 
 def make_move(state, player_throws, opponent_throws, colour):
@@ -55,8 +49,8 @@ def make_move(state, player_throws, opponent_throws, colour):
         - first throw      => random token & random depth:1 hex location
         - post first-throw => multi-minimax 
     """
-    
-    
+
+
     player = state["player"]
     opponent = state["opponent"]
     
@@ -68,30 +62,6 @@ def make_move(state, player_throws, opponent_throws, colour):
     # post first-throw => multi-minimax 
     return swing_slide_throw(player, opponent, state) 
     
-
-# |---------------------------------------------------------------------------|
-
-def make_move(state, player_throws, opponent_throws, colour):
-    """
-    LOGIC:
-        - first throw      => random token & random depth:1 hex location
-        - post first-throw => multi-minimax 
-    """
-    
-    
-    player = state["player"]
-    opponent = state["opponent"]
-    
-    # first throw => random token & random depth:1 hex location
-    if player_throws == 9 and opponent_throws == 9:
-        return first_throw(colour)      
-    
-
-    # post first-throw => multi-minimax 
-    return swing_slide_throw(player, opponent, state) 
-    
-
-
 # |---------------------------------------------------------------------------|
 
 def generate_children(dictionary):
@@ -117,6 +87,6 @@ def generate_children(dictionary):
                         
                         # If swing_loc is in hex_suggestions that means that location is already slidable so doesnt need to be included
                         if not out_of_board(swing_loc) and swing_loc not in hex_suggestions:
-                            final_moves_suggestions.append((swing_loc, loc, dictionary[loc], "SWING"))
+                            final_moves_suggestions.append(swing(loc, swing_loc))
 
     return final_moves_suggestions

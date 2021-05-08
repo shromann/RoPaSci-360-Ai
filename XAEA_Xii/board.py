@@ -41,7 +41,28 @@ def update_state(state, action):
 
     state['player'] = update_player_state(state['player'], action)
     state['opponent'] = update_player_state(state['opponent'], action)
+    
+    return state
 
+def play_game(state):
+    player = state['player']
+    opponent = state['opponent']
+
+    overlaps = []
+    for p in player.keys():
+        for o in opponent.keys():
+            if o == p:
+                overlaps.append(o)
+
+    if overlaps:    
+        for o in overlaps:
+            feild = play_rps(player[o] + opponent[o])
+        
+        if feild[0] in player[o]:
+            opponent[o] = []
+        if feild[0] in opponent[o]:
+            player[o] = [] 
+     
     return state
 
 

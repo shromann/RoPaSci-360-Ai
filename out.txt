@@ -1,0 +1,24 @@
+
+
+** Turn 2
+
+{'player': defaultdict(<class 'list'>, {(4, 0): ['s']}), 'opponent': defaultdict(<class 'list'>, {(-4, 0): ['s']})}
+{'player': defaultdict(<class 'list'>, {(4, -1): ['s']}), 'opponent': defaultdict(<class 'list'>, {(-3, 0): ['s']})}
+*   player 1 (upper) returned action: ('SLIDE', (4, 0), (3, 1))
+
+{'player': defaultdict(<class 'list'>, {(-4, 0): ['s']}), 'opponent': defaultdict(<class 'list'>, {(4, 0): ['s']})}
+{'player': defaultdict(<class 'list'>, {(-3, 0): ['s']}), 'opponent': defaultdict(<class 'list'>, {(4, -1): ['s']})}
+*   player 2 (lower) returned action: ('SLIDE', (-4, 0), (-4, 1))
+
+{'player': defaultdict(<class 'list'>, {(4, -1): ['s']}), 'opponent': defaultdict(<class 'list'>, {(-3, 0): ['s']})}
+{'player': defaultdict(<class 'list'>, {(4, -2): ['s']}), 'opponent': defaultdict(<class 'list'>, {(-2, 0): ['s']})}
+*   player 1 (upper) returned action: ('SLIDE', (4, -1), (4, 0))
+
+{'player': defaultdict(<class 'list'>, {(-3, 0): ['s']}), 'opponent': defaultdict(<class 'list'>, {(4, -1): ['s']})}
+{'player': defaultdict(<class 'list'>, {(-2, 0): ['s']}), 'opponent': defaultdict(<class 'list'>, {(4, -2): ['s']})}
+*   player 2 (lower) returned action: ('SLIDE', (-3, 0), (-3, 1))
+
+** game error!
+* error: invalid action!
+* upper player's action, ('SLIDE', (4, -1), (4, 0)), is not well-formed or not available. See specification and game rules for details, or consider currently available actions:
+

@@ -30,7 +30,7 @@ def check_invincible(board_state):
     return diff_in_invincible
 
 def evaluation(max_player, min_player, depth, alpha, beta, is_max, game_state):
-    return 0 
+    return 0
     # throw_weight = 2
     # on_board_weight = 1
     # num_captures_weight = 1
