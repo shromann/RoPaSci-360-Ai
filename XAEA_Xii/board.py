@@ -24,6 +24,7 @@ def update_player_state(state, action):
     if mv_type == 'THROW':
         token = action[1]
     elif mv_type in ['SLIDE', 'SWING']:
+<<<<<<< HEAD
 
         if action[1] in state.keys():
             token = state[action[1]].pop()
@@ -33,11 +34,18 @@ def update_player_state(state, action):
             return state
     
 
+=======
+        token = state[action[1]].pop()
+        if  not state[action[1]]:
+            del state[action[1]]
+    
+>>>>>>> parent of bce3c3c... before the big change
     state[loc].append(token)
     state[loc] = play_rps(state[loc]) # minimize
 
     return state
 
+<<<<<<< HEAD
 def update_state(state, action):
 
     state['player'] = update_player_state(state['player'], action)
@@ -47,3 +55,11 @@ def update_state(state, action):
 
 
 
+=======
+
+# state = {"player":{}, "opponenet":{}}
+
+def update_state(state, action):
+    
+    ...
+>>>>>>> parent of bce3c3c... before the big change
