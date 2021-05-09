@@ -1,4 +1,4 @@
-from XAEA_Xii.board import update_player_state, play_game, play_rps
+from XAEA_Xii.board import update_player_state, play_game
 from XAEA_Xii.move import make_move
 
 from collections import defaultdict
@@ -41,10 +41,3 @@ class Player:
             self.state["player"]   = update_player_state(self.state["player"]  ,   player_action)
             self.state["opponent"] = update_player_state(self.state["opponent"], opponent_action)
             self.state = play_game(self.state, player_new_loc, opponent_new_loc)
-
-            # Play_rps has to be after play_game as if on a hex upper has 'p', 's' and lower has 'r'
-            # This ensures that all 3 tokens are killed
-            # If play_rps is first, upper would have 's' remaining and lower would have 'r' remaining
-            # So when play_game is called, the 's' would still be remaining when all 3 should have been killed
-            self.state["player"]   = play_rps(self.state["player"], player_action[2])
-            self.state["opponent"] = play_rps(self.state["opponent"], opponent_action[2])
