@@ -35,6 +35,9 @@ class Player:
         if player_action[0] == 'THROW':
             self.player_throws   -= 1
 
-        self.state["player"]   = update_player_state(self.state["player"]  ,   player_action)
-        self.state["opponent"] = update_player_state(self.state["opponent"], opponent_action)
-        self.state = play_game(self.state)
+        opponent_new_loc = opponent_action[2]
+        player_new_loc = player_action[2]
+        if player_action[2] != opponent_action:
+            self.state["player"]   = update_player_state(self.state["player"]  ,   player_action)
+            self.state["opponent"] = update_player_state(self.state["opponent"], opponent_action)
+            self.state = play_game(self.state, player_new_loc, opponent_new_loc)

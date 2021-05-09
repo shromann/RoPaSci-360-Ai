@@ -33,7 +33,7 @@ def update_player_state(state, action):
             return state
 
     state[loc].append(token)
-    state[loc] = play_rps(state[loc]) # minimize
+    #state[loc] = play_rps(state[loc]) # minimize
 
     return state
 
@@ -44,15 +44,19 @@ def update_state(state, action):
     
     return state
 
-def play_game(state):
+def play_game(state, player_move_hex, opponent_move_hex):
     player = state['player']
     opponent = state['opponent']
 
+    # There can only be two locations that need to be looked at each round to check overlapping tokens
+    # Those locations are the throw,slide,swing new location (always the 2nd index of an action move)
     overlaps = []
-    for p in player.keys():
-        for o in opponent.keys():
-            if o == p:
-                overlaps.append(o)
+    if player_move_hex != opponent_move_hex:
+        overlaps.append(player_move_hex)
+        overlaps.append(opponent_move_hex)
+    else:
+        overlaps.append(player_move_hex)
+
 
     if overlaps:    
         for o in overlaps:
