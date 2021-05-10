@@ -1,7 +1,6 @@
 import copy
 
 def update(state, team, action, main = False):
-    # print(state[team], action, team)
 
     mv_type = action[0]
     loc = action[2]
@@ -11,16 +10,9 @@ def update(state, team, action, main = False):
         state[team + "_throws"] += 1
 
     elif mv_type in ["SLIDE", "SWING"]:
-        try:
-            print(state[team], action, team)
-            token = state[team][action[1]].pop()
-        except IndexError:
-            print()
-            print('dead', state[team], action, team)
-            exit(1)
-
-    if not state[team][action[1]]:
-        del state[team][action[1]]
+        token = state[team][action[1]].pop()
+        if not state[team][action[1]]:
+            del state[team][action[1]]
 
     if not main:
         gameplay(state)

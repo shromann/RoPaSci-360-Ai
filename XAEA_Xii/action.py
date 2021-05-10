@@ -70,7 +70,7 @@ def minimax(max_player, min_player, depth, alpha, beta, is_max, state):
         max_queue = child_of('player', game_state)
         max_move = -inf
         for child in max_queue:
-            game_state = copy.deepcopy(game_state)
+            game_state = copy.deepcopy(state)
             update(game_state, 'player', child)
             max_move = max(max_move, minimax(child, min_player, depth-1, alpha, beta, False, game_state))
             alpha = max(alpha, max_move)
@@ -81,7 +81,7 @@ def minimax(max_player, min_player, depth, alpha, beta, is_max, state):
         min_queue = child_of('opponent', game_state)
         min_move = inf
         for child in min_queue:
-            game_state = copy.deepcopy(game_state)
+            game_state = copy.deepcopy(state)
             update(game_state, 'opponent', child)
             min_move = min(min_move, minimax(max_player, child, depth-1, alpha, beta, True, game_state))
             beta = min(alpha, min_move)
