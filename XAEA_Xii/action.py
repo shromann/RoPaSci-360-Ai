@@ -67,8 +67,6 @@ def minimax(max_player, min_player, depth, alpha, beta, is_max, state):
     if depth == 0:
         return evaluation()
     if is_max:
-        print(max_player)
-        update(game_state, 'player', max_player)
         max_queue = child_of('player', game_state)
         max_move = -inf
         for child in max_queue:
@@ -80,8 +78,6 @@ def minimax(max_player, min_player, depth, alpha, beta, is_max, state):
                 break
         return max_move
     else:
-        print(min_player)
-        update(game_state, 'opponent', min_player)
         min_queue = child_of('opponent', game_state)
         min_move = inf
         for child in min_queue:
@@ -97,8 +93,6 @@ def minimax(max_player, min_player, depth, alpha, beta, is_max, state):
 
 
 def evaluation():
-    print('whats up my g')
-    exit(1)
     return 0
 
 def child_of(team, state):

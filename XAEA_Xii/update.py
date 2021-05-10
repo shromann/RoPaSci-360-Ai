@@ -1,7 +1,7 @@
 import copy
 
 def update(state, team, action, main = False):
-    print(state[team], action, team)
+    # print(state[team], action, team)
 
     mv_type = action[0]
     loc = action[2]
@@ -12,11 +12,11 @@ def update(state, team, action, main = False):
 
     elif mv_type in ["SLIDE", "SWING"]:
         try:
-            # print(state[team], action, team)
+            print(state[team], action, team)
             token = state[team][action[1]].pop()
         except IndexError:
-            # print()
-            # print('dead', state[team], action, team)
+            print()
+            print('dead', state[team], action, team)
             exit(1)
 
     if not state[team][action[1]]:
