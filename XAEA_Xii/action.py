@@ -1,11 +1,11 @@
 from XAEA_Xii.const import board, adjacent_squares, base
 from XAEA_Xii.update import update, win
+from collections import defaultdict
 from random import randint
+from math import ceil
 from numpy import inf
 import itertools
 import copy
-from collections import defaultdict
-from math import ceil
 
 
 def action(state):
@@ -117,7 +117,7 @@ def evaluation(game_state):
     throw_weight = 2
     on_board_weight = 1
     num_captures_weight = 1
-    game_dists_weight = 1.5
+    game_dists_weight = 3
 
     opp_num_tokens = len(game_state['opponent'].values())
     player_num_tokens = len(game_state['player'].values())
@@ -243,12 +243,25 @@ def select_sym(team, state):
         opponent = set(itertools.chain.from_iterable(state['player'].values())) 
 
     toks = ['r', 's', 'p']
-    
     for t in range(3):
         win, lose = toks[t], toks[(t+1)%3]
         if win not in player and lose in opponent:
             return win
+
+    if 2 in state['track'].values():
+        for config in state['track']:
+            if state['track'][config] == 2:
+                target = config[-1]
+                break    
         
+        opponent = state['opponent'][target]
+
+        toks = ['r', 's', 'p']
+        for t in range(3):
+            win, lose = toks[t], toks[(t+1)%3]
+            if lose in opponent:
+                return win
+
 def optimal_depth(state):
     val = len(state['player']) + len(state['opponent']) / 18
     if val < 0.25:
@@ -256,9 +269,9 @@ def optimal_depth(state):
     elif val > 0.25 and val < 0.5:
         return 3
     elif val > 0.5 and val < 0.75:
-        return 2
+        return 3
     elif val > 0.75:
-        return 1
+        return 2
 
 def dist(loc_1, loc_2):
     return (abs(loc_1[0] - loc_2[0]) 

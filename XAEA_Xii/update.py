@@ -10,15 +10,20 @@ def update(state, team, action, main = False):
         state[team + "_throws"] += 1
 
     elif mv_type in ["SLIDE", "SWING"]:
-        token = state[team][action[1]].pop()
-        if not state[team][action[1]]:
-            del state[team][action[1]]
+        try:
+            token = state[team][action[1]].pop()
+            if not state[team][action[1]]:
+                del state[team][action[1]]
+        except IndexError:
+            return 
+        except KeyError:
+            return
+
+    state[team][loc].append(token)
 
     if not main:
         gameplay(state)
-
-    state[team][loc].append(token)
-        
+  
 def gameplay(state):
     game = []
     player = copy.deepcopy(state['player'])
@@ -34,7 +39,7 @@ def gameplay(state):
 
     for team, loc in game:
         del state[team][loc]
-
+    
     self_kill(state['player'])
     self_kill(state['opponent'])
 
@@ -61,3 +66,6 @@ def win(a, b):
         if win in b and lose in a:
             return -1
     return 0
+
+def tracking(state):
+    state['track'][tuple(state['player'].keys()) + tuple(state['opponent'].keys())] += 1
