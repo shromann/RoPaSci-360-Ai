@@ -1,10 +1,12 @@
 from XAEA_Xii.const import board, adjacent_squares, base
-from XAEA_Xii.update import update
+from XAEA_Xii.update import update, win
 from random import randint
 from numpy import inf
 import itertools
 import copy
 from collections import defaultdict
+from math import ceil
+
 
 def action(state):
     game_state = state.copy()
@@ -15,7 +17,6 @@ def action(state):
 
     return AI_move(game_state)
     
-
 def first_throw(state):
     if state["player_throws"] == 0 and state["opponent_throws"] == 0:
         tok = ['r', 'p', 's'][randint(0,2)]
@@ -23,11 +24,10 @@ def first_throw(state):
         return throw(tok, loc[state['colour']])
     return False
 
-
 def AI_move(state):
     
     game_state = copy.deepcopy(state)
-    depth = 4
+    depth = optimal_depth(state)
 
     move_to_make = 0
     max_move = -inf
@@ -42,6 +42,7 @@ def AI_move(state):
         min_move = inf
         beta = inf
         for opponent in opponent_queue:
+
             min_move = min(min_move, minimax(child, opponent, depth - 1, alpha, beta, False, game_state))
             beta = min_move
             if alpha >= beta:
@@ -53,19 +54,13 @@ def AI_move(state):
     
     return move_to_make
 
-
-# ---------------------------------------------------  important function -------------------------------------------
-
+# ---------------------------------------------------  important function -------------------------------------------------
 
 def minimax(max_player, min_player, depth, alpha, beta, is_max, state):
 
     game_state = copy.deepcopy(state)
-
-    # max_queue = filter(lambda x: x[2] == max_player[1] or x[1] in ['r', 'p', 's'], max_queue)
-    # min_queue = filter(lambda x: x[2] == min_player[1] or x[1] in ['r', 'p', 's'], min_queue)
-
     if depth == 0:
-        return evaluation()
+        return evaluation(state)
     if is_max:
         max_queue = child_of('player', game_state)
         max_move = -inf
@@ -90,10 +85,6 @@ def minimax(max_player, min_player, depth, alpha, beta, is_max, state):
         return min_move
 
     return 0 
-
-
-def evaluation():
-    return 0
 
 def child_of(team, state):
 
@@ -121,6 +112,85 @@ def child_of(team, state):
     childs = throws + swings + slides
     return childs
 
+def evaluation(game_state):
+
+    throw_weight = 2
+    on_board_weight = 1
+    num_captures_weight = 1
+    game_dists_weight = 1.5
+
+    opp_num_tokens = len(game_state['opponent'].values())
+    player_num_tokens = len(game_state['player'].values())
+    diff_in_tokens = player_num_tokens - opp_num_tokens
+    diff_in_throws = game_state['player_throws'] - game_state['opponent_throws']
+    num_captures = game_state['opponent_throws'] - opp_num_tokens
+    invinciblity = check_invincible(game_state)
+    dists_score = 1/best_distance(game_state)
+
+    # board state where both players have no throws so invincible tokens are truly invincible
+    if game_state['player_throws'] == 0 and game_state['opponent_throws'] == 0:
+        invincible_weight = 10
+
+    # board state where opponent has no throws but player does have
+    elif game_state['opponent_throws'] == 0:
+        # If they currently have a more invinvible tokens but we can throw opposite type to negate so half the weight
+        if invinciblity < 0:
+            invincible_weight = 5
+
+    elif game_state['player_throws'] == 0:
+        # If they currently have a more invinvible tokens but we can throw opposite type to negate so half the weight
+        if invinciblity > 0:
+            invincible_weight = 5
+    else:
+        invincible_weight = 5
+    
+    return (invincible_weight*invinciblity) + (throw_weight*diff_in_throws) + (on_board_weight*diff_in_tokens) + (num_captures_weight*num_captures) + (game_dists_weight*dists_score)
+
+def check_invincible(board_state):
+    # Get the unique token types of player and opponent
+    player_tokens = set(itertools.chain.from_iterable(board_state['player'].values()))
+    oppo_tokens = set(itertools.chain.from_iterable(board_state['opponent'].values()))
+    diff_in_invincible = 0
+
+    # play rps for each player type against each oppo type
+    for player_type in player_tokens:
+        can_be_defeated = 0
+        for oppo_type in oppo_tokens:
+            # If win function is -1, that means our token type is not invincible 
+            if win(player_type, oppo_type) == -1:
+                can_be_defeated = 1
+        # If it is not invincible, don't add it to the count of invincible tokens otherwise do add it
+        if can_be_defeated != 1:
+            diff_in_invincible += 1
+
+    # Same as above code but deincrementing if opponent has the invincible token
+    for oppo_type in player_tokens:
+        can_be_defeated = 0
+        for player_type in oppo_tokens:
+            if win(oppo_type, player_type) == -1:
+                can_be_defeated = 1
+        if can_be_defeated != 1:
+            diff_in_invincible -= 1
+
+    return diff_in_invincible 
+
+def best_distance(board_state):
+    player = board_state['player']
+    opponent = board_state['opponent']
+    
+    dists = []
+    for p in player:
+        for pp in player[p]:
+            for o in opponent:
+                for oo in opponent[o]:
+                    if win(pp, oo) == 1:
+                        dists.append(dist(p, o))
+    if dists:
+        val = min(dists)
+        if val == 0:
+            return 1
+        return val
+    return 9
 
 # --------------------------------------------------- helper functions -----------------------------------------------------
 def adjacents(loc):
@@ -179,6 +249,22 @@ def select_sym(team, state):
         if win not in player and lose in opponent:
             return win
         
+def optimal_depth(state):
+    val = len(state['player']) + len(state['opponent']) / 18
+    if val < 0.25:
+        return 4
+    elif val > 0.25 and val < 0.5:
+        return 3
+    elif val > 0.5 and val < 0.75:
+        return 2
+    elif val > 0.75:
+        return 1
+
+def dist(loc_1, loc_2):
+    return (abs(loc_1[0] - loc_2[0]) 
+          + abs(loc_1[0] + loc_1[1] - loc_2[0] - loc_2[1])
+          + abs(loc_1[1] - loc_2[1])) / 2
+
 def throw(token, loc):
     return ("THROW", token, loc)
 
