@@ -150,7 +150,7 @@ def evaluation(game_state):
     throw_weight = 2
     on_board_weight = 1
     num_captures_weight = 3
-    game_dists_weight = 0.7
+    game_dists_weight = 0.5
 
     opp_num_tokens = len(game_state['opponent'].values())
     player_num_tokens = len(game_state['player'].values())
