@@ -40,8 +40,8 @@ def gameplay(state):
     for team, loc in game:
         del state[team][loc]
     
-    self_kill(state['player'])
     self_kill(state['opponent'])
+    self_kill(state['player'])
 
 def self_kill(dictionary):
     for loc in dictionary:

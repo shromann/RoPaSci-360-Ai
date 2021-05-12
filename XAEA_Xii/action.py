@@ -8,6 +8,8 @@ import itertools
 import copy
 
 
+# ------------------------------------------------------------ AI ----------------------------------------------------------
+
 def action(state):
     game_state = state.copy()
 
@@ -27,7 +29,7 @@ def first_throw(state):
 def AI_move(state):
     
     game_state = copy.deepcopy(state)
-    depth = optimal_depth(state)
+    depth = 1
 
     move_to_make = 0
     max_move = -inf
@@ -54,13 +56,15 @@ def AI_move(state):
     
     return move_to_make
 
-# ---------------------------------------------------  important function -------------------------------------------------
+# ---------------------------------------------------  important functions -------------------------------------------------
 
 def minimax(max_player, min_player, depth, alpha, beta, is_max, state):
 
     game_state = copy.deepcopy(state)
     if depth == 0:
-        return evaluation(state)
+        x = evaluation(state)
+        # print(max_player, x)
+        return x
     if is_max:
         max_queue = child_of('player', game_state)
         max_move = -inf
@@ -84,8 +88,6 @@ def minimax(max_player, min_player, depth, alpha, beta, is_max, state):
                 break
         return min_move
 
-    return 0 
-
 def child_of(team, state):
 
     throws = []
@@ -97,7 +99,7 @@ def child_of(team, state):
         sym = select_sym(team, state)
         if sym:
             throws += throw_child(team, state, sym)
-            return throws
+
 
     # slides
     for loc in state[team]:
@@ -112,12 +114,45 @@ def child_of(team, state):
     childs = throws + swings + slides
     return childs
 
+def sep(dictionary):
+    r, p, s = [], [], []
+    for k in dictionary:
+        if 'r' in dictionary[k]:
+            r.append(k)
+        if 'p' in dictionary[k]:
+            p.append(k)
+        if 's' in dictionary[k]:
+            s.append(k)
+    return r, p, s
+
+def find_min_dist(player, opponent):
+
+    if player == [] or opponent == []:
+        return 9
+
+    dists = []
+    for p in player:
+        for o in opponent:
+            dists.append(dist(p, o))
+    return min(dists)
+
+def best_distance(game_state):
+    player_r, player_p, player_s = sep(game_state['player'])
+    opponent_r, opponent_p, opponent_s = sep(game_state['opponent'])
+
+    min_dist_r_s = find_min_dist(player_r, opponent_s)
+    min_dist_p_r = find_min_dist(player_p, opponent_r)
+    min_dist_s_p = find_min_dist(player_s, opponent_p)
+
+    val = 1/(min(min_dist_r_s, min_dist_p_r, min_dist_s_p))
+    return val
+
 def evaluation(game_state):
 
-    throw_weight = 2
+    throw_weight = 1
     on_board_weight = 1
-    num_captures_weight = 1
-    game_dists_weight = 3
+    num_captures_weight = 3
+    game_dists_weight = 2
 
     opp_num_tokens = len(game_state['opponent'].values())
     player_num_tokens = len(game_state['player'].values())
@@ -125,7 +160,7 @@ def evaluation(game_state):
     diff_in_throws = game_state['player_throws'] - game_state['opponent_throws']
     num_captures = game_state['opponent_throws'] - opp_num_tokens
     invinciblity = check_invincible(game_state)
-    dists_score = 1/best_distance(game_state)
+    dists_score = best_distance(game_state)
 
     # board state where both players have no throws so invincible tokens are truly invincible
     if game_state['player_throws'] == 0 and game_state['opponent_throws'] == 0:
@@ -173,24 +208,6 @@ def check_invincible(board_state):
             diff_in_invincible -= 1
 
     return diff_in_invincible 
-
-def best_distance(board_state):
-    player = board_state['player']
-    opponent = board_state['opponent']
-    
-    dists = []
-    for p in player:
-        for pp in player[p]:
-            for o in opponent:
-                for oo in opponent[o]:
-                    if win(pp, oo) == 1:
-                        dists.append(dist(p, o))
-    if dists:
-        val = min(dists)
-        if val == 0:
-            return 1
-        return val
-    return 9
 
 # --------------------------------------------------- helper functions -----------------------------------------------------
 def adjacents(loc):
@@ -242,36 +259,15 @@ def select_sym(team, state):
     if team == 'opponent':
         opponent = set(itertools.chain.from_iterable(state['player'].values())) 
 
+    tt = []
     toks = ['r', 's', 'p']
     for t in range(3):
         win, lose = toks[t], toks[(t+1)%3]
         if win not in player and lose in opponent:
-            return win
+            tt.append(win)
 
-    if 2 in state['track'].values():
-        for config in state['track']:
-            if state['track'][config] == 2:
-                target = config[-1]
-                break    
-        
-        opponent = state['opponent'][target]
-
-        toks = ['r', 's', 'p']
-        for t in range(3):
-            win, lose = toks[t], toks[(t+1)%3]
-            if lose in opponent:
-                return win
-
-def optimal_depth(state):
-    val = len(state['player']) + len(state['opponent']) / 18
-    if val < 0.25:
-        return 4
-    elif val > 0.25 and val < 0.5:
-        return 3
-    elif val > 0.5 and val < 0.75:
-        return 3
-    elif val > 0.75:
-        return 2
+    if len(tt) >= 1:
+        return tt.pop()
 
 def dist(loc_1, loc_2):
     return (abs(loc_1[0] - loc_2[0]) 
