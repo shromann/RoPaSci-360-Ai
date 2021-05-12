@@ -62,9 +62,7 @@ def minimax(max_player, min_player, depth, alpha, beta, is_max, state):
 
     game_state = copy.deepcopy(state)
     if depth == 0:
-        x = evaluation(state)
-        # print(max_player, x)
-        return x
+        return evaluation(state)
     if is_max:
         max_queue = child_of('player', game_state)
         max_move = -inf
@@ -108,8 +106,8 @@ def child_of(team, state):
     # swings
     for loc_1 in state[team]:
         for loc_2 in state[team]:
-            if loc_1 != loc_2 and loc_1 in adjacents(loc_2):
-                swings += swing_child(loc_1, loc_2, slides + list(state[team].keys()))
+            if loc_1 != loc_2 and loc_2 in neigh(loc_1):
+                swings += swing_child(loc_1, loc_2, neigh(loc_1))
 
     childs = throws + swings + slides
     return childs
@@ -149,10 +147,10 @@ def best_distance(game_state):
 
 def evaluation(game_state):
 
-    throw_weight = 1
+    throw_weight = 2
     on_board_weight = 1
     num_captures_weight = 3
-    game_dists_weight = 2
+    game_dists_weight = 0.7
 
     opp_num_tokens = len(game_state['opponent'].values())
     player_num_tokens = len(game_state['player'].values())
@@ -210,9 +208,13 @@ def check_invincible(board_state):
     return diff_in_invincible 
 
 # --------------------------------------------------- helper functions -----------------------------------------------------
-def adjacents(loc):
+def neigh(loc):
     nexts = list(adjacent_squares.values())
     nexts = list(map(lambda x:(loc[0]+x[0], loc[1]+x[1]), nexts))
+    return nexts
+
+def adjacents(loc):
+    nexts = neigh(loc)
     nexts = list(filter(lambda x: x[0] in board.keys() and x[1] in board[x[0]], nexts))
     return nexts
 
@@ -225,7 +227,8 @@ def slide_child(loc, reserved):
 def swing_child(loc_1, loc_2, reserved):
 
     swings = adjacents(loc_2)
-    swings = list(map(lambda x: swing(loc_1, x), filter(lambda x: x not in reserved, swings)))
+    swings = list(filter(lambda x: x not in reserved, swings))
+    swings = list(map(lambda x: swing(loc_1, x), swings))
     return swings 
 
 def throw_child(team, state, sym):

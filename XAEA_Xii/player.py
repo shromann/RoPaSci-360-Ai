@@ -8,7 +8,9 @@ class Player:
        
         self.track = defaultdict(int)
         self.state  = {"player": defaultdict(list), "opponent": defaultdict(list), "player_throws": 0, "opponent_throws": 0, "colour": player}
-        
+        self.turn = 0
+
+
     def action(self):
 
         return action(self.state)
@@ -19,7 +21,10 @@ class Player:
         update(self.state, 'player', player_action, main=True)
         gameplay(self.state)
 
-        print(self.state['player'])
+        self.turn += 1
+        print(self.turn)
+
+        
 
 
         
